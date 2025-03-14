@@ -1,0 +1,24 @@
+#!/bin/bash
+
+read -p "do you want to create user (Yes/No):" USER
+while [[ $USER = "YES" ]] || [[ $USER = "yes" ]]
+do
+read -p "enter user name:" USERNAME
+SPECIAL="@#$%^&*"
+PASS=`echo $SPECIAL | fold -w1 | shuf | head -1`
+PASSWORD=INDIA$PASS$RANDOM
+
+EXUSER=`cat /etc/passwd | grep -i $USERNAME | cut -d ":" -f1`
+
+if [[ $EXUSER == $USERNAME ]]
+then 
+echo "user alredy exist"
+else
+useradd -m $USERNAME
+echo $PASSWORD | passwd --stdin $USERNAME
+passwd -e $USERNAME
+echo $USERNAME $PASSWORD
+fi
+read -p "do you want to create user (YES/NO):" USER
+done
+echo "you opted no"
